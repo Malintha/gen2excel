@@ -1,9 +1,7 @@
-package org.m8.toexcel;
+package org.m8.genius;
 
-import jxl.CellView;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
-import jxl.format.UnderlineStyle;
 import jxl.write.*;
 import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
@@ -27,7 +25,7 @@ public class WriteExcel {
 
     /***
      * read agent log and return an array of data
-     *
+     * <p>
      * agent name
      * A/B/C...
      * issues
@@ -40,16 +38,16 @@ public class WriteExcel {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(agentLog)));
             String line = br.readLine();
-            while(line != null) {
+            while (line != null) {
                 if (line.contains("sent the following offer")) {
                     ArrayList<String> outputArrayList = new ArrayList();
                     String[] firstLine = line.split(" ");
                     outputArrayList.add(firstLine[1]);
-                    outputArrayList.add(String.valueOf(line.substring(line.indexOf("("),line.indexOf(")")).charAt(1)));
+                    outputArrayList.add(String.valueOf(line.substring(line.indexOf("("), line.indexOf(")")).charAt(1)));
                     line = br.readLine();
-                    String offer = line.substring(line.indexOf('['),line.indexOf(']'));
+                    String offer = line.substring(line.indexOf('['), line.indexOf(']'));
                     String[] issues = offer.split(",");
-                    for(int i = 0; i<issues.length-1;i++) {
+                    for (int i = 0; i < issues.length - 1; i++) {
                         outputArrayList.add(issues[i].split(":")[1]);
                     }
                     outputArray.add(outputArrayList);
@@ -81,8 +79,7 @@ public class WriteExcel {
         workbook.close();
     }
 
-    private void createLabel(WritableSheet sheet)
-            throws WriteException {
+    private void createLabel(WritableSheet sheet) throws WriteException {
         // Write headers
         addCaption(sheet, 0, 0, "agentName");
         addCaption(sheet, 1, 0, "agentCode");
@@ -99,10 +96,10 @@ public class WriteExcel {
     }
 
     private void createContent(WritableSheet sheet, ArrayList<ArrayList<String>> logs) throws WriteException {
-        for(int i =0; i <logs.size(); i++) {
+        for (int i = 0; i < logs.size(); i++) {
             ArrayList<String> log = logs.get(i);
-            for(int j =0; j<log.size();j++) {
-                addText(sheet, j, i+1, log.get(j));
+            for (int j = 0; j < log.size(); j++) {
+                addText(sheet, j, i + 1, log.get(j));
             }
 
         }
@@ -115,8 +112,8 @@ public class WriteExcel {
         sheet.addCell(label);
     }
 
-    private void addNumber(WritableSheet sheet, int column, int row,
-                           Integer integer) throws WriteException, RowsExceededException {
+    private void addNumber(WritableSheet sheet, int column, int row, Integer integer)
+            throws WriteException, RowsExceededException {
         Number number;
         number = new Number(column, row, integer, times);
         sheet.addCell(number);
